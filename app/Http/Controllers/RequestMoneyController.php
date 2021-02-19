@@ -502,6 +502,13 @@ class RequestMoneyController extends APIController
       ));
     }
 
+    public function updateStatusByParams($column, $value, $status = 1){
+      RequestMoney::where($column, '=', $value)->update(array(
+        'status' => $status,
+        'updated_at' => Carbon::now()
+      ));
+    }
+
     public function getAmount($requestId){
       $result = RequestMoney::where('id', '=', $requestId)->get();
       return sizeof($result) > 0 ? floatval($result[0]['amount']) : null;

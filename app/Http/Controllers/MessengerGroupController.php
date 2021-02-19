@@ -77,7 +77,7 @@ class MessengerGroupController extends APIController
         $message->created_at = Carbon::now();
         $message->save();
 
-        app($this->requestClass)->updateStatus($data['payload'], 1);
+        app($this->requestClass)->updateStatusByParams('code', $data['title'], 1);
 
         $parameter = array(
           'to' => $memberData,
