@@ -74,8 +74,8 @@ class Notifications implements ShouldQueue
           'topic' => 'Payhiram',
           'data'  => $this->data,
           'notification' => array(
-            'title' => 'Test',
-            'body'  => 'Another Test'
+            'title' => $this->type,
+            'body'  => $this->data['message']
           )
         );
         app('App\Http\Controllers\FirebaseController')->sendLocal($data);
