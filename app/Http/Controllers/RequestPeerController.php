@@ -32,6 +32,7 @@ class RequestPeerController extends APIController
     $this->insertDB($data);
     if($this->response['data'] > 0){
       // notifications
+      $this->response['error'] = null;
       $requestData = app($this->requestClass)->getByParams('id', $data['request_id']);
       $parameter = array(
         'to' => $this->retriveAccountIdByCode($data['to']),
