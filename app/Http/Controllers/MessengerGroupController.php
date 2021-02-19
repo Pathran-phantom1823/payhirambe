@@ -37,6 +37,7 @@ class MessengerGroupController extends APIController
       $result = $this->getByParams('title', $data['title']);
 
       if($result != null){
+        $this->response['data'] = $result['id'];
         $this->response['error'] = array(
           'message' => 'Already exist!',
           'status'  => 'duplicate'
