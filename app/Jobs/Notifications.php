@@ -70,7 +70,7 @@ class Notifications implements ShouldQueue
         }            
       }else{
         $data = array(
-          'topic' => $this->type.'-'.$data['account_id'],
+          'topic' => $this->type.'-'.$this->data['account_id'],
           'data'  => $data,
           'notification' => array(
             'title' => 'Test',
