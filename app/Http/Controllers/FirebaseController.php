@@ -11,7 +11,7 @@ class FirebaseController extends APIController
   function __construct(){
   	$path = 'http\controllers\payhiram-firebase-adminsdk-nn06x-910d50fc3a.json';
   	if(env('OS') == 'linux'){
-  		$path = 'http/controllers/payhiram-firebase-adminsdk-nn06x-910d50fc3a.json';
+  		$path = 'Http/Controllers/payhiram-firebase-adminsdk-nn06x-910d50fc3a.json';
   	}
   	$factory = (new Factory)->withServiceAccount(app_path($path));
   	$this->messaging = $factory->createMessaging();
