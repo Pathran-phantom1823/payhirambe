@@ -34,7 +34,7 @@ class RequestPeerController extends APIController
       // notifications
       $requestData = app($this->requestClass)->getByParams('id', $data['request_id']);
       $parameter = array(
-        'to' => $data['to'],
+        'to' => $this->retriveAccountIdByCode($data['to']),
         'from' => $data['account_id'],
         'payload' => 'request',
         'payload_value' => $data['request_id'],
