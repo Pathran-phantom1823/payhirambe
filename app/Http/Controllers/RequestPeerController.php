@@ -43,7 +43,6 @@ class RequestPeerController extends APIController
         'account_id'  => $accountId
       );
       // app($this->notificationClass)->createByParamsOnFirebase($parameter);
-      dd($parameter);
       Notifications::dispatch('PeerRequest', $parameter);
     }
     return $this->response();
