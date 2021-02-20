@@ -445,7 +445,7 @@ class RequestMoneyController extends APIController
         $result['total'] = $this->getTotalBorrowed($result['account_id']);
         $result['initial_amount'] = $result['amount'];
         $result['amount'] = $amount;
-        $result['invested'] = $invested['size'];
+        $result['invested'] = 0;
         $result['billing_per_month_human'] = $this->billingPerMonth($result['billing_per_month']);
         $result['coupon'] = null;
         $result['peer_flag'] = false; 
