@@ -75,7 +75,8 @@ class Notifications implements ShouldQueue
           'data'  => $this->data,
           'notification' => array(
             'title' => ucfirst($this->data['title']),
-            'body'  => $this->data['message']
+            'body'  => $this->data['message'],
+            'imageUrl' => env('DOMAIN').'increment/v1/storage/logo/logo.png'
           )
         );
         app('App\Http\Controllers\FirebaseController')->sendLocal($data);
