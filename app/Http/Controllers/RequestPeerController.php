@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\RequestPeer;
 use Carbon\Carbon;
+use App\Jobs\Notifications;
 class RequestPeerController extends APIController
 {
   public $notificationClass = 'Increment\Common\Notification\Http\NotificationController';
@@ -34,15 +35,16 @@ class RequestPeerController extends APIController
       // notifications
       $this->response['error'] = null;
       $requestData = app($this->requestClass)->getByParams('id', $data['request_id']);
+      $accountId = $this->retriveAccountIdByCode($data['to']);
       $parameter = array(
-        'to' => $this->retriveAccountIdByCode($data['to']),
-        'from' => $data['account_id'],
-        'payload' => 'request',
-        'payload_value' => $data['request_id'],
-        'route' => '/requests/'.$requestData['code'],
-        'created_at' => Carbon::now()
+        'data'        => $data,
+        'message'     => 'Processing proposal from '.$this->retrieveNameOnly($data['account_id']),
+        'title'       => 'New peer request',
+        'account_id'  => $accountId
       );
-      app($this->notificationClass)->createByParams($parameter);
+      // app($this->notificationClass)->createByParamsOnFirebase($parameter);
+
+      Notifications::dispatch('PeerRequest', $parameter);
     }
     return $this->response();
   }
