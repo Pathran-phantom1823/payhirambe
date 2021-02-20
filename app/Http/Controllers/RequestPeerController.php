@@ -38,7 +38,7 @@ class RequestPeerController extends APIController
       $accountId = $this->retriveAccountIdByCode($data['to']);
       $parameter = array(
         'data'        => $data,
-        'message'     => 'Processing proposal from '.$this->retrieveNameOnly($data['account_id']),
+        'message'     => "There's new processing proposal to your request",
         'title'       => 'New peer request',
         'account_id'  => $accountId
       );
