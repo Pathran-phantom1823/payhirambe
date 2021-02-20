@@ -74,7 +74,7 @@ class Notifications implements ShouldQueue
           'topic' => 'Payhiram-'.ucfirst($this->type).'-'.$this->data['account_id'],
           'data'  => $this->data,
           'notification' => array(
-            'title' => ucfirst($this->type),
+            'title' => ucfirst($this->data['title']),
             'body'  => $this->data['message']
           )
         );

@@ -36,12 +36,9 @@ class RequestPeerController extends APIController
       $this->response['error'] = null;
       $requestData = app($this->requestClass)->getByParams('id', $data['request_id']);
       $accountId = $this->retriveAccountIdByCode($data['to']);
-      $parameter = array(
-        'data'        => $data,
-        'message'     => "There's new processing proposal to your request",
-        'title'       => 'New peer request',
-        'account_id'  => $accountId
-      );
+      $data['message'] = "There's new processing proposal to your request";
+      $data['title'] = 'New peer request';
+      $data['account_id'] = $accountId;
       // app($this->notificationClass)->createByParamsOnFirebase($parameter);
       Notifications::dispatch('PeerRequest', $parameter);
     }
