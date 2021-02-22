@@ -80,7 +80,6 @@ class Notifications implements ShouldQueue
           )
         );
         app('App\Http\Controllers\FirebaseController')->sendLocal($data);
-        echo json_encode($this->data);
       }
 
     }
