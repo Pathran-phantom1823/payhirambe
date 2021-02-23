@@ -36,12 +36,20 @@ class RequestPeerController extends APIController
       $this->response['error'] = null;
       $requestData = app($this->requestClass)->getByParams('id', $data['request_id']);
       $accountId = $this->retriveAccountIdByCode($data['to']);
-      $data['message'] = "There's new processing proposal to your request";
-      $data['title'] = 'New peer request';
-      $data['account_id'] = $accountId;
-      $data['custom_id'] = $data['request_id'];
-      // app($this->notificationClass)->createByParamsOnFirebase($parameter);
-      Notifications::dispatch('PeerRequest', $data);
+      // $data['message'] = "There's new processing proposal to your request";
+      // $data['title'] = 'New peer request';
+      // $data['account_id'] = $accountId;
+      // $data['custom_id'] = $data['request_id'];
+      $parameter = array(
+        'from'    => $data['account_id'],
+        'to'      => $data['to'],
+        'payload' => 'Peer Request',
+        'payload_value' => $data['request_id'],
+        'route'   => $data['request_item'],
+        'created_at'  => Carbon::now()
+      );
+      app($this->notificationClass)->createByParams($parameter);
+      // Notifications::dispatch('PeerRequest', $data);
     }
     return $this->response();
   }
