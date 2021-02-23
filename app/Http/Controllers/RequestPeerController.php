@@ -45,7 +45,7 @@ class RequestPeerController extends APIController
         'to'      => $data['to'],
         'payload' => 'Peer Request',
         'payload_value' => $data['request_id'],
-        'route'   => $data['request_item'],
+        'route'   => 'request_item',
         'created_at'  => Carbon::now()
       );
       app($this->notificationClass)->createByParams($parameter);
