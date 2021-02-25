@@ -77,7 +77,7 @@ class RequestPeerController extends APIController
   public function getApprovedByParams($column, $value){
     $result = RequestPeer::where($column, '=', $value)->where('status', '=', 'approved')->get();
     if(sizeof($result) > 0){
-      $result[0]['account'] = $this->retrieveAccountDetails($result[0]['account_id']);
+      $result[0]['account'] = $this->retrieveAccountDetailsOnRequests($result[0]['account_id']);
     }
     return sizeof($result) > 0 ? $result[0] : null;
   }

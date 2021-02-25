@@ -326,7 +326,8 @@ class RequestMoneyController extends APIController
             $result[$i]['invested'] = $invested['size'];
             $result[$i]['billing_per_month_human'] = $this->billingPerMonth($result[$i]['billing_per_month']);
             $result[$i]['coupon'] = null;
-            $result[$i]['peer_flag'] = app('App\Http\Controllers\RequestPeerController')->checkIfExist($result[$i]['id'], $data['account_id']); 
+            $result[$i]['peer_flag'] = app('App\Http\Controllers\RequestPeerController')->checkIfExist($result[$i]['id'], $data['account_id']);
+            $result[$i]['peer'] = app($this->requestPeerClass)->getApprovedByParams('request_id', $result[$i]['id']);
           $i++;
         }
       }
