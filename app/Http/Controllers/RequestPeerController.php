@@ -42,7 +42,7 @@ class RequestPeerController extends APIController
       // $data['custom_id'] = $data['request_id'];
       $parameter = array(
         'from'    => $data['account_id'],
-        'to'      => $data['to'],
+        'to'      => $accountId,
         'payload' => 'Peer Request',
         'payload_value' => $data['request_id'],
         'route'   => 'request_item',
