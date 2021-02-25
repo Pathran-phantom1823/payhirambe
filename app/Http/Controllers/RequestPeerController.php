@@ -87,6 +87,16 @@ class RequestPeerController extends APIController
     return sizeof($result) > 0 ? $result[0] : null;
   }
 
+  public function updateStatusByParams($column, $value, $status, $accountId){
+    $request = app($this->requestClass)->getByParamsWithColumns('code', $value, ['id']);
+    if($request){
+      RequestMoney::where('request_id', '=', $request['id'])->where('account_id', '=', $accountId)->update(array(
+        'status' => $status,
+        'updated_at' => Carbon::now()
+      ));      
+    }
+  }
+
   public function retrieveItem(Request $request){
     $data = $request->all();
     $result = null;

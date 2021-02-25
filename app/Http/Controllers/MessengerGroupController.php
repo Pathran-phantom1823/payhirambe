@@ -79,6 +79,7 @@ class MessengerGroupController extends APIController
         $message->save();
 
         app($this->requestClass)->updateStatusByParams('code', $data['title'], 1);
+        app($this->requestPeerClass)->updateStatusByParams('code', $data['title'], 'approved', $memberData);
 
         $parameter = array(
           'to' => $memberData,
