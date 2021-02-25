@@ -312,6 +312,8 @@ class RequestMoneyController extends APIController
           // $this->response['data'][$i]['total'] = $this->getTotalBorrowed($result[$i]['account_id']);
           // $this->response['data'][$i]['initial_amount'] = $result[$i]['amount'];
           // $this->response['data'][$i]['coupon'] = null;
+            $invested = app($this->investmentClass)->invested($result[$i]['id']);
+            $amount = floatval($result[$i]['amount']);
             $result[$i]['location'] = null; 
             $result[$i]['images'] = app($this->requestImageClass)->getByParams('request_id', $result[$i]['id']);
             $result[$i]['rating'] = app($this->ratingClass)->getRatingByPayload('profile', $result[$i]['account_id']);
