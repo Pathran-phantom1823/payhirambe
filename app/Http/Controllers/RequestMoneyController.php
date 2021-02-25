@@ -328,6 +328,7 @@ class RequestMoneyController extends APIController
           $i++;
         }
       }
+      $this->response['data'] = $result;
       return $this->response();
     }
 
