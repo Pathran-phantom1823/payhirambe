@@ -303,15 +303,28 @@ class RequestMoneyController extends APIController
       if(sizeof($result) > 0){
         $i = 0;
         foreach ($result as $key) {
-          $this->response['data'][$i]['account'] =  $this->retrieveAccountDetails($result[$i]['account_id']);
-          $this->response['data'][$i]['peers'] = app($this->requestPeerClass)->getByParams('request_id', $result[$i]['id']);
-          $this->response['data'][$i]['images'] = app($this->requestImageClass)->getByParams('request_id', $result[$i]['id']);
-          $this->response['data'][$i]['rating'] = app($this->ratingClass)->getRatingByPayload('profile', $result[$i]['account_id']);
-          $this->response['data'][$i]['created_at_human'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y h:i A');
-          $this->response['data'][$i]['needed_on_human'] = Carbon::createFromFormat('Y-m-d', $result[$i]['needed_on'])->copy()->tz($this->response['timezone'])->format('F j, Y'); // should not have a time
-          $this->response['data'][$i]['total'] = $this->getTotalBorrowed($result[$i]['account_id']);
-          $this->response['data'][$i]['initial_amount'] = $result[$i]['amount'];
-          $this->response['data'][$i]['coupon'] = null;
+          // $this->response['data'][$i]['account'] =  $this->retrieveAccountDetails($result[$i]['account_id']);
+          // $this->response['data'][$i]['peers'] = app($this->requestPeerClass)->getByParams('request_id', $result[$i]['id']);
+          // $this->response['data'][$i]['images'] = app($this->requestImageClass)->getByParams('request_id', $result[$i]['id']);
+          // $this->response['data'][$i]['rating'] = app($this->ratingClass)->getRatingByPayload('profile', $result[$i]['account_id']);
+          // $this->response['data'][$i]['created_at_human'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y h:i A');
+          // $this->response['data'][$i]['needed_on_human'] = Carbon::createFromFormat('Y-m-d', $result[$i]['needed_on'])->copy()->tz($this->response['timezone'])->format('F j, Y'); // should not have a time
+          // $this->response['data'][$i]['total'] = $this->getTotalBorrowed($result[$i]['account_id']);
+          // $this->response['data'][$i]['initial_amount'] = $result[$i]['amount'];
+          // $this->response['data'][$i]['coupon'] = null;
+            $result[$i]['location'] = null; 
+            $result[$i]['images'] = app($this->requestImageClass)->getByParams('request_id', $result[$i]['id']);
+            $result[$i]['rating'] = app($this->ratingClass)->getRatingByPayload('profile', $result[$i]['account_id']);
+            $result[$i]['account'] =  $this->retrieveAccountDetailsOnRequests($result[$i]['account_id']);
+            $result[$i]['created_at_human'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y h:i A');
+            $result[$i]['needed_on_human'] = Carbon::createFromFormat('Y-m-d', $result[$i]['needed_on'])->copy()->tz($this->response['timezone'])->format('F j, Y'); // should not have a time
+            $result[$i]['total'] = $this->getTotalBorrowed($result[$i]['account_id']);
+            $result[$i]['initial_amount'] = $result[$i]['amount'];
+            $result[$i]['amount'] = $amount - $invested['total'];
+            $result[$i]['invested'] = $invested['size'];
+            $result[$i]['billing_per_month_human'] = $this->billingPerMonth($result[$i]['billing_per_month']);
+            $result[$i]['coupon'] = null;
+            $result[$i]['peer_flag'] = app('App\Http\Controllers\RequestPeerController')->checkIfExist($result[$i]['id'], $data['account_id']); 
           $i++;
         }
       }
