@@ -90,7 +90,7 @@ class RequestPeerController extends APIController
   public function updateStatusByParams($column, $value, $status, $accountId){
     $request = app($this->requestClass)->getByParamsWithColumns('code', $value, ['id']);
     if($request){
-      RequestMoney::where('request_id', '=', $request['id'])->where('account_id', '=', $accountId)->update(array(
+      RequestPeer::where('request_id', '=', $request['id'])->where('account_id', '=', $accountId)->update(array(
         'status' => $status,
         'updated_at' => Carbon::now()
       ));      
