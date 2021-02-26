@@ -84,7 +84,7 @@ class RequestValidationController extends APIController
     $data = $request->all();
     $result = RequestValidation::where('account_id', '=', $data['account_id'])
       ->where('payload', '=', $data['payload'])
-      ->where('request', '=', $data['request_id'])
+      ->where('request_id', '=', $data['request_id'])
       ->where('status', '=', $data['status'])
       ->get();
     if(sizeof($result) > 0){
