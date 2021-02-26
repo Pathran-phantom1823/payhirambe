@@ -88,7 +88,7 @@ class RequestValidationController extends APIController
       'status'      => $data['status']
     );
     $this->insertDB($insertData);
-    app($this->messengerGroupClass)->broadcastByParams($data['messages']['messenger_group_id'], $data['messages']['account_id'], false);
+    // app($this->messengerGroupClass)->broadcastByParams($data['messages']['messenger_group_id'], $data['messages']['account_id'], false);
     return $this->response();
   }
 
