@@ -90,6 +90,7 @@ class RequestValidationController extends APIController
     if(sizeof($result) > 0){
       $this->response['data'] = null;
       $this->response['error'] = 'Already exist';
+      return $this->response();
     }else{
       $insertData = array(
         'account_id'  => $data['account_id'],
