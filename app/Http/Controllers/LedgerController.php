@@ -247,7 +247,7 @@ class LedgerController extends APIController
       // );
       // app('App\Http\Controllers\EmailController')->ledger($data['account_id'], $details, $email['subject']);  
       
-      app($this->notificationClass)->createByParams($notification);
+      // app($this->notificationClass)->createByParams($notification);
       return $ledger->id;
     }
     
