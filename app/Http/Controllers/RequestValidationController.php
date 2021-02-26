@@ -80,16 +80,27 @@ class RequestValidationController extends APIController
   }
 
   public function create(Request $request){
+
     $data = $request->all();
-    $insertData = array(
-      'account_id'  => $data['account_id'],
-      'payload'     => $data['payload'],
-      'request_id'  => $data['request_id'],
-      'status'      => $data['status']
-    );
-    $this->insertDB($insertData);
-    // app($this->messengerGroupClass)->broadcastByParams($data['messages']['messenger_group_id'], $data['messages']['account_id'], false);
-    return $this->response();
+    $result = RequestValidation::where('account_id', '=', $data['account_id'])
+      ->where('payload', '=', $data['payload'])
+      ->where('request', '=', $data['request_id'])
+      ->where('status', '=', $data['status'])
+      ->get();
+    if(sizeof($result) > 0){
+      $this->response['data'] = null;
+      $this->response['error'] = 'Already exist';
+    }else{
+      $insertData = array(
+        'account_id'  => $data['account_id'],
+        'payload'     => $data['payload'],
+        'request_id'  => $data['request_id'],
+        'status'      => $data['status']
+      );
+      $this->model = new RequestValidation();
+      $this->insertDB($insertData);        
+      return $this->response();
+    }
   }
 
   public function update(Request $request){
