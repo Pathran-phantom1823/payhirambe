@@ -106,7 +106,7 @@ class RequestMoneyController extends APIController
           $this->requestData = $result;
           $this->chargeData = $peerApproved;
           $response = $this->processPaymentByType();
-          if($response == true){
+          if($response['data'] != null){
             // update status of the requet
             RequestMoney::where('code', '=', $data['code'])->update(array(
               'status' => 2,
@@ -121,7 +121,7 @@ class RequestMoneyController extends APIController
           $error = 'No peer was selected! Invalid accessed';
         }
       }else{
-        $error = 'Request was not found! Invalid accessed!';
+        $error = 'Invalid accessed!';
       }
 
       return response()->json(array(
@@ -157,7 +157,6 @@ class RequestMoneyController extends APIController
     }
     public function processPaymentByType(){
       $account = app($this->accountClass)->getAccountIdByParamsWithColumns(env('PAYHIRAM_ACCOUNT'), ['id', 'code']);
-
       
       if($this->requestData == null || $this->chargeData == null || $this->requestData['account'] == null){
         return array(
@@ -235,11 +234,10 @@ class RequestMoneyController extends APIController
 
       $result = app($this->ledgerClass)->addNewEntry($data);
 
-      if($result > 0){
-        return true;
-      }else{
-        return $result;
-      }
+      return array(
+        'error' => null,
+        'data'  => $result
+      );
     }
 
     public function retrieveItem(Request $request){
