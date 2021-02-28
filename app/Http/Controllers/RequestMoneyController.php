@@ -215,7 +215,7 @@ class RequestMoneyController extends APIController
         'account_id'  => $this->chargeData['account_id'],
         'account_code' => $chargeAccount['code'],
         'description' => 'Processing from '.$description,
-        'amount'      => floatval($amount - $netCharge) * -1,
+        'amount'      => floatval($total + $netCharge) * -1,
         'currency'    => $currency,
         'payment_payload'  => 'request',
         'payment_payload_value' => $this->requestData['code'],
