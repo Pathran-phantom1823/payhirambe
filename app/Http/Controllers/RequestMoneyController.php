@@ -96,7 +96,7 @@ class RequestMoneyController extends APIController
               $peerApproved['charge'] = $peerApproved['charge'] - intval($coupon['amount']);
             }
           }
-          if($result['account']['code'] != $data['account_code']){
+          if($result['money_type'] == 'cash' && $result['account']['code'] != $data['account_code']){
             return response()->json(array(
               'error' => 'Invalid accessed!',
               'data' => null,
@@ -105,7 +105,17 @@ class RequestMoneyController extends APIController
           }
           $this->requestData = $result;
           $this->chargeData = $peerApproved;
-          $response = $this->processPaymentByType();
+          $response = array(
+            'data'  => null,
+            'error' => null
+          );
+
+          if($result['type'] == 3){
+            $response = $this->processPaymentEWallet($data);
+          }else{
+            $response = $this->processPaymentByType($data);
+          }
+          
           if($response['data'] != null){
             // update status of the requet
             RequestMoney::where('code', '=', $data['code'])->update(array(
@@ -155,7 +165,105 @@ class RequestMoneyController extends APIController
           return 'Others';
       }
     }
-    public function processPaymentByType(){
+
+    public function processPaymentEWallet($data){
+      $account = app($this->accountClass)->getAccountIdByParamsWithColumns(env('PAYHIRAM_ACCOUNT'), ['id', 'code']);
+      
+      if($this->requestData == null || $this->chargeData == null || $this->requestData['account'] == null){
+        return array(
+          'error' => 'Insufficient Information',
+          'data'  => null
+        );
+      }
+
+      $chargeAccount = $this->retrieveAccountDetailsOnRequests($this->chargeData['account_id']);
+
+      if($account == null){
+        return array(
+          'error' => 'Please contact the system administrator',
+          'data'  => null
+        );       
+      }
+
+      if($chargeAccount == null){
+        return array(
+          'error' => 'Insufficient Information',
+          'data'  => null
+        );    
+      }
+
+      if($chargeAccount['code'] != $data['account_code']){
+        return array(
+          'error' => 'Invalid Accessed',
+          'data'  => null
+        );  
+      }
+
+      $type = intval($this->requestData['type']);
+
+      $description = $this->getTypeDescription($type). ' request: Fund Transfer';
+      $amount = floatval($this->requestData['amount']);
+      $currency = $this->requestData['currency'];
+
+      // debit to processor
+      $charge = floatval($this->chargeData['charge']);
+      $netCharge = $charge * env('CHARGE_RATE_PAYHIRAM');
+      $total = $amount - $charge;
+
+      // Credit request amount from requestor
+      $data = array(
+        'account_id'  => $this->chargeData['account_id'],
+        'account_code' => $chargeAccount['code'],
+        'description' => 'Processing from '.$description,
+        'amount'      => floatval($amount - $netCharge) * -1,
+        'currency'    => $currency,
+        'payment_payload'  => 'request',
+        'payment_payload_value' => $this->requestData['code'],
+        'request_id' => $this->requestData['id'],
+        'from'        => $this->requestData['account_id']
+      );
+
+
+      $result = app($this->ledgerClass)->addNewEntry($data);
+
+
+      // Credit request amount from requestor
+      $data = array(
+        'account_id'  => $this->requestData['account_id'],
+        'account_code' => $this->requestData['account']['code'],
+        'description' => $description,
+        'amount'      => $total,
+        'currency'    => $currency,
+        'payment_payload'  => 'request',
+        'payment_payload_value' => $this->requestData['code'],
+        'request_id' => $this->requestData['id'],
+        'from'        => $account['id']
+      );
+
+      $result = app($this->ledgerClass)->addNewEntry($data);
+
+      // Credit request amount from requestor
+      $data = array(
+        'account_id'  => $account['id'],
+        'account_code' => $account['code'],
+        'description' => 'Charge share from '.$description,
+        'amount'      => $netCharge,
+        'currency'    => $currency,
+        'payment_payload'  => 'request',
+        'payment_payload_value' => $this->requestData['code'],
+        'request_id' => $this->requestData['id'],
+        'from'        => $account['id']
+      );
+
+      $result = app($this->ledgerClass)->addNewEntry($data);
+
+      return array(
+        'error' => null,
+        'data'  => $result
+      );
+    }
+
+    public function processPaymentByType($data){
       $account = app($this->accountClass)->getAccountIdByParamsWithColumns(env('PAYHIRAM_ACCOUNT'), ['id', 'code']);
       
       if($this->requestData == null || $this->chargeData == null || $this->requestData['account'] == null){
