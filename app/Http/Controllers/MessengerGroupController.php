@@ -36,6 +36,7 @@ class MessengerGroupController extends APIController
       $memberData = intval($data['member']);
       $result = $this->getByParams('title', $data['title']);
 
+      $this->response['error'] = null;
       if($result != null){
         $this->response['data'] = $result['id'];
         $this->response['error'] = array(
