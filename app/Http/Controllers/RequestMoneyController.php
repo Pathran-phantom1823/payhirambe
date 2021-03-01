@@ -41,7 +41,10 @@ class RequestMoneyController extends APIController
     	$data = $request->all();
     	$data['code'] = $this->generateCode();
       $data['status'] = 0;
-    	$this->model = new RequestMoney();
+      if(!isset($data['target'])){
+        $data['target'] = 'partner';
+      }
+     	$this->model = new RequestMoney();
     	$this->insertDB($data);
       if(intval($data['type']) > 100){
         // comaker
