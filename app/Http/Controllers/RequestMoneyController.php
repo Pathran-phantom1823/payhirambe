@@ -80,7 +80,9 @@ class RequestMoneyController extends APIController
     public function retrieveByPayloadValue(Request $request){
       $data = $request->all();
       $result = RequestMoney::where('id', '=', $data['payload_value'])->get();
-      return sizeof($result) > 0 ? $result : null;
+
+      $this->response['data'] = sizeof($result) > 0 ? $result : [];
+      return $this->response();
     }
 
     public function manageRequestByThread(Request $request){
