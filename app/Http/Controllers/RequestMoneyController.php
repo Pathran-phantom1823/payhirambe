@@ -80,8 +80,8 @@ class RequestMoneyController extends APIController
     public function retrieveByPayloadValue(Request $request){
       $data = $request->all();
       $result = RequestMoney::where('id', '=', $data['payload_value'])->get();
-
       $this->response['data'] = sizeof($result) > 0 ? $result : [];
+      $this->response['data'][0]['account'] = $this->retrieveAccountDetailsOnRequests($result[0]['account_id']);
       return $this->response();
     }
 
